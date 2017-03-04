@@ -59,11 +59,17 @@ Here is a simple example of a simple set of menus;
 "Backwards 30 sec",998,"backwards30"
 "Back",0,"Menu"
 
-# menu.02 - Screen2
+#menu.02 - Screen2
 "This is the",999,"Menu"
 "help page....",999,"Menu"
+"More info",3,"Menu"
 "Back",0,"Menu"
 
+#menu.03 - Screen3
+"This is a",999,"Menu"
+"sub menu...",999,"Menu"
+"Back",2,"Menu"
+ 
 On startup the first menu loaded (Screen0) will be loaded and displayed. 
 
 This will display two menu items which can be skipped through by pressing button 1 and selected with button 2.
@@ -100,4 +106,29 @@ and the coresponding menu file to call these functions when selected with button
 #menu.XX
 "Execute myFunction1",998,"myFunction1"
 "Execute myFunction2",998,"myFunction2"
+
+Usage:
+Copy the folders and source files in to your project directory and rename menusystem-example.py and extend with your own additional
+features.
+
+Edit the variables in globalsetting.py to match the GPIO pins you've used for the OLED SPI bus and your connected buttons.
+
+You'll also need to set the MENU_FOLDER variable to point to the directory containing your menu/screen definitions.
+
+Update myFunction.py to declare your function handlers and update the functionHandlersDictionary with a entry for each function.
+
+Update myClasses.py to add button handlers for any additional buttons you require over the madatory next and select buttons by 
+defining new button handlers in the myButton class.
+
+if you do add aditional buttons in myClasses.py myButton you will also need to update the following list object in myClasses.py by
+adding additional myButton objects to the list myButtonsList;
+
+# myButtonsList = [myButton(5,"Button1", myButton.button1Handler),myButton(6, "Button2", myButton.button2Handler)]
+
+The myButton object takes 3 arguments, the gpio pin the button is connected to, the lable for the button and then finaly the name of
+the handler function added to the myButton class in myClasses.py.
+
+Example
+
+# myButtonsList = [myButton(5,"Button1", myButton.button1Handler),myButton(6, "Button2", myButton.button2Handler),myButton(7, "Button3", myButton.button3Handler)]
 

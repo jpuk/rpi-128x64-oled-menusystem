@@ -7,6 +7,7 @@ import globalsettings
 import pdb
 import sys
 import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)	
 
 # import project files
 sys.path.insert(0, "./menusystem/")
@@ -27,6 +28,7 @@ from myClasses import *
 
 
 def main():
+	
 	menusystem = MenuSystem()
 	
 	while True:

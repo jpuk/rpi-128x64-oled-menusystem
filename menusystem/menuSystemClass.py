@@ -13,7 +13,6 @@ from displayClass import *
 from buttonClass import *
 # import menu handler classes
 from menuHandlerClass import *
-
 # import extended classes
 from myClasses import *
 
@@ -42,7 +41,7 @@ class MenuSystem:
 			
 
 			# create 2 button objects
-			self.buttons = [myButton(5,"Button1", myButton.button1Handler),Button(6, "Button2", myButton.button2Handler)]
+			self.buttons = myButtonsList
 
 			self.display.drawTitle("Menu system")
 
@@ -80,7 +79,7 @@ class MenuSystem:
 					self.freshPass = True
 					#call button handler
 					button.buttonPress(menu=self.menus[globalsettings.selectedMenu],menufunc=self.myMenuFunctions)
-				time.sleep(0.5)	
+				time.sleep(globalsettings.BUTTON_SLEEP_TIME)	
 					
 	def updateScreen(self):						
 		if ( self.changedFlipFlop == True ):
@@ -95,15 +94,15 @@ class MenuSystem:
 				if ( item[1] == 999 and self.freshPass == True ):
 					self.menus[globalsettings.selectedMenu].selected += 1
  
-						
+				j = 0		
 				if ( i == self.menus[globalsettings.selectedMenu].selected  and item[1] != 999):
 					#if not the first item then remove highlighting from previous item
 					if ( self.menus[globalsettings.selectedMenu].selected != 0 ):
 						if ( globalsettings.SECOND_SCREEN == True):
 							
 							if ( i >= globalsettings.MAX_ITEM_PERSCREEN+1):
-								print(i - globalsettings.MAX_ITEM_PERSCREEN)
-								j = ((i - globalsettings.MAX_ITEM_PERSCREEN) * Tglobalsettings.EXT_LINE_X) + (globalsettings.MAIN_X)
+								#print(i - globalsettings.MAX_ITEM_PERSCREEN)
+								j = ((i - globalsettings.MAX_ITEM_PERSCREEN) * globalsettings.TEXT_LINE_X) + (globalsettings.MAIN_X)
 						else:
 							if ( i < globalsettings.MAX_ITEM_PERSCREEN):
 								j = (i * globalsettings.TEXT_LINE_X) + (globalsettings.MAIN_X)								
@@ -111,7 +110,7 @@ class MenuSystem:
 						if ( globalsettings.SECOND_SCREEN == True):
 							
 							if ( i >= globalsettings.MAX_ITEM_PERSCREEN+1):
-								print(i - globalsettings.MAX_ITEM_PERSCREEN)
+								#print(i - globalsettings.MAX_ITEM_PERSCREEN)
 								self.display.drawTextLine(self.lastItem[0], (i - 4)-1, selected=False)
 						else:
 							if ( i < globalsettings.MAX_ITEM_PERSCREEN):
@@ -121,7 +120,7 @@ class MenuSystem:
 					if ( globalsettings.SECOND_SCREEN == True):
 						
 						if ( i >= globalsettings.MAX_ITEM_PERSCREEN):
-							print(i - globalsettings.MAX_ITEM_PERSCREEN)
+							#print(i - globalsettings.MAX_ITEM_PERSCREEN)
 							self.display.drawTextLine(item[0], i - 4, selected=True)
 					else:
 						if ( i < globalsettings.MAX_ITEM_PERSCREEN):
@@ -132,7 +131,7 @@ class MenuSystem:
 					if ( globalsettings.SECOND_SCREEN == True ):
 						
 						if ( i >= globalsettings.MAX_ITEM_PERSCREEN):
-							print(i - globalsettings.MAX_ITEM_PERSCREEN)
+							#print(i - globalsettings.MAX_ITEM_PERSCREEN)
 							self.display.drawTextLine(item[0], i - 4, selected=False)
 					else:
 						if ( i < globalsettings.MAX_ITEM_PERSCREEN):

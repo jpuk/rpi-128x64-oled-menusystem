@@ -12,14 +12,16 @@ from menuHandlerClass import *
 class myButton(Button):
 	def __init__(self, pin, lable, action):
 		Button.__init__(self, pin, lable, action)
+	
+	# button handlers
 	def button1Handler(self, menu=None, menufunc=None):
-		global SECOND_SCREEN
+		globalsettings.SECOND_SCREEN
 		print("Button 1 handler ") 
 		if (menu.selected < (menu.length )):
 			menu.selected += 1
 		if (menu.selected == menu.length ):
 			print("selected has overflowed ", menu.selected)
-			SECOND_SCREEN = False
+			globalsettings.SECOND_SCREEN = False
 			menu.selected = 0
 
 	def button2Handler(self, menu=None, menufunc=None):
@@ -38,8 +40,14 @@ class myButton(Button):
 			globalsettings.SECOND_SCREEN = False
 			menu.selected = 0
 		
+		#user defined button handlers here
 
-#extend class to hold the menu function handlers for each action with a function
+
+# List of buttons and associated handlers
+myButtonsList = [myButton(5,"Button1", myButton.button1Handler),myButton(6, "Button2", myButton.button2Handler)]
+
+
+#extentions to MenuFunc class go here
 # function handlers
 class MyMenuFunc(MenuFunc):
 	def __init__(self, functionHandlersDictionary):

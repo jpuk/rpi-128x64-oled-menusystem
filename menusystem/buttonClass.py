@@ -12,3 +12,4 @@ class Button:
 
 	def buttonPress(self, menu=None, menufunc=None):
 		self.action(self, menu=menu, menufunc=menufunc)
+

@@ -16,6 +16,14 @@ TEXT_Y_OFFSET = 5
 MAIN_X = 16
 MAX_ITEM_PERSCREEN = 4
 SECOND_SCREEN = False
+# font settings
+# font name and location
+FONT_NAME = "./fonts/DejaVuSerif.ttf"
+# font size
+FONT_SIZE = 10
+
+# Time to wait between button presses
+BUTTON_SLEEP_TIME = 0.5
 
 # Location of menu files
 # MENU_FOLDER = "./menus"
@@ -23,3 +31,5 @@ MENU_FOLDER = "./example-menus/"
 # var to track selected menu 
 selectedMenu = 0
 ############
+
+

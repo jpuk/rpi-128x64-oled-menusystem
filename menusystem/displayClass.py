@@ -40,7 +40,7 @@ class Display:
 		self.height = self.disp.height
 		self.image = Image.new('1', (self.width, self.height))
 		self.draw = ImageDraw.Draw(self.image)
-		self.font = ImageFont.truetype("./fonts/DejaVuSerif.ttf", 10)
+		self.font = ImageFont.truetype(globalsettings.FONT_NAME, globalsettings.FONT_SIZE)
 
 	#draw title in the header section of the oled
 	def drawTitle(self, text):
