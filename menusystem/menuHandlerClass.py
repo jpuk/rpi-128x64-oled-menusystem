@@ -11,24 +11,44 @@ class Menu:
 	def __init__(self, items, length):
 		self.length = length
 		self.items = items
+		self.menuTitle = ""
 		self.selected = 0
 		
 # read in files for each menu screen
 class MenuReader:
 	def __init__(self, folder):
+		#check menu folder
 		print("Menu Reader class initialized")
 		if os.path.isdir(folder):
 			self.folder = folder
 			print("Menus will be read from ", folder)
 		else:
 			print("Folder for menu files does not exist")
+		
+		#check that title files exists
+		if os.path.isfile(os.path.join(self.folder,"titles.lst")):
+			self.titlesFile = os.path.join(self.folder,"titles.lst")
+		else:
+			print("File with Menu titles does not exist")
 		# init array to hold menus in
 		self.menus = []
 		self.menuFiles = []
+		self.Titles = []
 		
 	def getMenuFiles(self):
 		self.menuFiles = glob.glob( os.path.join(self.folder,"menu.*"))
-	
+		
+	def processTitlesFile(self):
+		print("Processing titles files", self.titlesFile)
+		n= 0
+		with open(self.titlesFile, 'rt') as titlesfile:
+			for line in titlesfile:
+				self.Titles.append(line)
+				print("Title entered in to list position,",[n, self.Titles[n]])
+				#print("Line ", line)
+				n += 1
+		return self.Titles
+				
 	def processMenuFiles(self):
 		i = 0
 		j = 0
@@ -81,7 +101,7 @@ class MenuFunc:
 		return self.funcHandler[lable][0]
 	
 	def returnFunctionHandlerLable(self, lable):
-		print("Return function handler for", lable)
+		print("Return function handler lable for", lable)
 		return self.funcHandler[lable][1]
 		
 	def executeFunctionHandler(self, lable):

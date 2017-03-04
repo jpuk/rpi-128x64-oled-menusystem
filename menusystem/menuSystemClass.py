@@ -20,9 +20,9 @@ from myClasses import *
 ##menu system class
 class MenuSystem:
 	def __init__(self):
-		#set GPIO mode
+			print ("Initialising MenuSystem object")
+			#set GPIO mode
 			GPIO.setmode(GPIO.BCM)	
-
 			#create display object
 			self.display = Display()
 
@@ -34,22 +34,31 @@ class MenuSystem:
 			self.menuReader.getMenuFiles()
 			#create array of menu objects from files
 			self.menus = self.menuReader.processMenuFiles()
+			self.titles = self.menuReader.processTitlesFile()
 			
 			# call registerFunctions() from myfunctions.py which contains function handlers and definitions
 			# functionHandlersDictionary is in myfucntions.py
 			self.myMenuFunctions = MyMenuFunc(functionHandlersDictionary)
 			
-
-			# create 2 button objects
+			# create button objects
 			self.buttons = myButtonsList
 
-			self.display.drawTitle("Menu system")
-
-			#button handler / main loop
+			#draw title 
+			#self.display.clearTitle()
+			self.display.drawTitle(self.titles[globalsettings.selectedMenu])
+			
+			#for button handler / main loop
 			self.changedFlipFlop = True
 			self.lastItem = None
 			self.freshPass = True
-			print ("Initialising MenuSystem object")
+			
+			#set timestamp to be used to measure time between screen changes
+			self.screenSaverActive = False
+			self.timestamp = int(time.time())
+			self.activationTime = None
+			
+	def updateLastChangeTimestamp(self):
+		self.timestamp =  int(time.time())
 			
 	def checkButtons(self):
 		# check buttons to see if they've been pressed and if so call handler function
@@ -68,7 +77,7 @@ class MenuSystem:
 							globalsettings.SECOND_SCREEN = True
 						print("SECOND SCREEN = ", globalsettings.SECOND_SCREEN)				
 					if (self.menus[globalsettings.selectedMenu].selected == 0 or self.menus[globalsettings.selectedMenu].selected == 4):
-						print("selected ", self.menus[globalsettings.selectedMenu].selected)
+						#print("Clearing display")
 						self.display.clearDisplay()
 						self.display.clearMainScreen()
 				
@@ -78,12 +87,22 @@ class MenuSystem:
 					self.display.clearMainScreen()
 					self.freshPass = True
 					#call button handler
+					#print(self.menus)
 					button.buttonPress(menu=self.menus[globalsettings.selectedMenu],menufunc=self.myMenuFunctions)
+					# the selectedMenu variable isn't incered until the button handler is proccessed so we don't upade title until now
+					self.display.clearTitle()
+					self.display.drawTitle(self.titles[globalsettings.selectedMenu])
 				time.sleep(globalsettings.BUTTON_SLEEP_TIME)	
 					
 	def updateScreen(self):						
 		if ( self.changedFlipFlop == True ):
+			#update last time stamp
+			self.updateLastChangeTimestamp()  
+			# disable screensaver if active
+			self.disableScreenSaver()
+			
 			i = 0
+			#draw menu items
 			for item in self.menus[globalsettings.selectedMenu].items:
 				#if current item is selected
 				#invese text and highlight background
@@ -93,7 +112,7 @@ class MenuSystem:
 					self.freshPass = True
 				if ( item[1] == 999 and self.freshPass == True ):
 					self.menus[globalsettings.selectedMenu].selected += 1
- 
+				
 				j = 0		
 				if ( i == self.menus[globalsettings.selectedMenu].selected  and item[1] != 999):
 					#if not the first item then remove highlighting from previous item
@@ -101,7 +120,6 @@ class MenuSystem:
 						if ( globalsettings.SECOND_SCREEN == True):
 							
 							if ( i >= globalsettings.MAX_ITEM_PERSCREEN+1):
-								#print(i - globalsettings.MAX_ITEM_PERSCREEN)
 								j = ((i - globalsettings.MAX_ITEM_PERSCREEN) * globalsettings.TEXT_LINE_X) + (globalsettings.MAIN_X)
 						else:
 							if ( i < globalsettings.MAX_ITEM_PERSCREEN):
@@ -110,17 +128,15 @@ class MenuSystem:
 						if ( globalsettings.SECOND_SCREEN == True):
 							
 							if ( i >= globalsettings.MAX_ITEM_PERSCREEN+1):
-								#print(i - globalsettings.MAX_ITEM_PERSCREEN)
 								self.display.drawTextLine(self.lastItem[0], (i - 4)-1, selected=False)
 						else:
 							if ( i < globalsettings.MAX_ITEM_PERSCREEN):
 								self.display.drawTextLine(self.lastItem[0], i -1, selected=False)
+					
 					#if wrapping round to first item remove highligting from last item
-
 					if ( globalsettings.SECOND_SCREEN == True):
 						
 						if ( i >= globalsettings.MAX_ITEM_PERSCREEN):
-							#print(i - globalsettings.MAX_ITEM_PERSCREEN)
 							self.display.drawTextLine(item[0], i - 4, selected=True)
 					else:
 						if ( i < globalsettings.MAX_ITEM_PERSCREEN):
@@ -131,7 +147,6 @@ class MenuSystem:
 					if ( globalsettings.SECOND_SCREEN == True ):
 						
 						if ( i >= globalsettings.MAX_ITEM_PERSCREEN):
-							#print(i - globalsettings.MAX_ITEM_PERSCREEN)
 							self.display.drawTextLine(item[0], i - 4, selected=False)
 					else:
 						if ( i < globalsettings.MAX_ITEM_PERSCREEN):
@@ -140,5 +155,24 @@ class MenuSystem:
 				i = i + 1
 				self.lastItem = item
 			self.freshPass = False
-			
+		
+	def disableScreenSaver(self):
+		if (self.screenSaverActive == True):
+			self.screenSaverActive = False
+			self.updateLastChangeTimestamp
+			self.display.disableScreenSaver()
+			self.display.clearDisplay()
+			self.display.clearMainScreen()
+			self.display.clearTitle()
+			self.display.drawTitle(self.titles[globalsettings.selectedMenu])
+		return 0
+		
+	def checkScreenSaver(self):
+		self.activationTime = self.timestamp + globalsettings.SCREEN_SAVER_TIMEOUT
+		#if (self.screenSaverActive == False):
+		if( int(time.time()) >= int(self.activationTime) ):
+			self.screenSaverActive = True
+			self.display.displayScreenSaver()
+
+				
 ######

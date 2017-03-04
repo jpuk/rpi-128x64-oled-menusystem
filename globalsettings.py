@@ -22,6 +22,9 @@ FONT_NAME = "./fonts/DejaVuSerif.ttf"
 # font size
 FONT_SIZE = 10
 
+# screen saver setting
+SCREEN_SAVER_TIMEOUT = 25
+
 # Time to wait between button presses
 BUTTON_SLEEP_TIME = 0.5
 

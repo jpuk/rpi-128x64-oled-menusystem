@@ -41,11 +41,19 @@ class Display:
 		self.image = Image.new('1', (self.width, self.height))
 		self.draw = ImageDraw.Draw(self.image)
 		self.font = ImageFont.truetype(globalsettings.FONT_NAME, globalsettings.FONT_SIZE)
-
+		self.screenSaverI = 0
+		
 	#draw title in the header section of the oled
 	def drawTitle(self, text):
+		print("Drawing title")
 		self.draw.rectangle((0,0,self.width,MAIN_X), outline=0, fill=1)
-		self.draw.text((3, 3),    text, font=self.font, fill=0)
+		self.draw.text((3, 3),    text[:-1], font=self.font, fill=0)
+		self.disp.image(self.image)
+		self.disp.display()
+	
+	def clearTitle(self):
+		print("Clearing title")
+		self.draw.rectangle((0,0, self.width, globalsettings.MAIN_X - 1), outline=0, fill=0)
 		self.disp.image(self.image)
 		self.disp.display()
 
@@ -62,6 +70,7 @@ class Display:
 	
 	#clear the main section of the screen leaving the header intact
 	def clearMainScreen(self):
+		print("Clearing main screen")
 		self.draw.rectangle((0,MAIN_X, self.width, 64 ), outline=0, fill=0)
 		self.disp.image(self.image)
 		self.disp.display()
@@ -74,6 +83,45 @@ class Display:
 		self.disp.display()
 	
 	def clearDisplay(self):
+		print("Clearing whole display")
 		self.disp.clear()
 		self.disp.image(self.image)
 		self.disp.display()
+		
+	def displayScreenSaver(self):
+		width = self.disp.width
+		height = self.disp.height
+		self.draw.rectangle((0,0,width,height), outline=0, fill=0)
+
+		# Draw some shapes.
+		# First define some constants to allow easy resizing of shapes.
+		padding = 2
+		shape_width = 20
+		top = padding
+		bottom = height-padding
+		# Move left to right keeping track of the current x position for drawing shapes.
+		x = padding + self.screenSaverI
+		# Draw an ellipse.
+		self.draw.ellipse((x, top , x+shape_width, bottom), outline=255, fill=0)
+		x += shape_width+padding
+		# Draw a rectangle.
+		self.draw.rectangle((x, top, x+shape_width, bottom), outline=255, fill=0)
+		x += shape_width+padding
+		# Draw a triangle.
+		self.draw.polygon([(x, bottom), (x+shape_width/2, top), (x+shape_width, bottom)], outline=255, fill=0)
+		x += shape_width+padding
+		# Draw an X.
+		self.draw.line((x, bottom, x+shape_width, top), fill=255)
+		self.draw.line((x, top, x+shape_width, bottom), fill=255)
+		x += shape_width+padding
+		self.disp.image(self.image)
+		self.disp.display()
+		self.screenSaverI += 1
+		if (self.screenSaverI == 128):
+			self.screenSaverI = -128
+		return 0
+		
+	def disableScreenSaver(self):
+		print("Disabling screensaver")
+		self.clearDisplay()
+		return 0

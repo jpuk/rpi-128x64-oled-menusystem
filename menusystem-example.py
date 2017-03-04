@@ -33,6 +33,7 @@ def main():
 	
 	while True:
 		menusystem.checkButtons()
+		menusystem.checkScreenSaver()
 		menusystem.updateScreen()
 	
 	# clean up GPIO		
