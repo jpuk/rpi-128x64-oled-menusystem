@@ -85,13 +85,13 @@ class Display:
 	def clearDisplay(self):
 		print("Clearing whole display")
 		self.disp.clear()
+		#self.image =  Image.new('1', (self.width, self.height))
 		self.disp.image(self.image)
 		self.disp.display()
 		
 	def displayScreenSaver(self):
 		width = self.disp.width
 		height = self.disp.height
-		self.draw.rectangle((0,0,width,height), outline=0, fill=0)
 
 		# Draw some shapes.
 		# First define some constants to allow easy resizing of shapes.
@@ -101,27 +101,41 @@ class Display:
 		bottom = height-padding
 		# Move left to right keeping track of the current x position for drawing shapes.
 		x = padding + self.screenSaverI
-		# Draw an ellipse.
-		self.draw.ellipse((x, top , x+shape_width, bottom), outline=255, fill=0)
-		x += shape_width+padding
-		# Draw a rectangle.
-		self.draw.rectangle((x, top, x+shape_width, bottom), outline=255, fill=0)
-		x += shape_width+padding
-		# Draw a triangle.
-		self.draw.polygon([(x, bottom), (x+shape_width/2, top), (x+shape_width, bottom)], outline=255, fill=0)
-		x += shape_width+padding
-		# Draw an X.
-		self.draw.line((x, bottom, x+shape_width, top), fill=255)
-		self.draw.line((x, top, x+shape_width, bottom), fill=255)
-		x += shape_width+padding
-		self.disp.image(self.image)
-		self.disp.display()
-		self.screenSaverI += 1
+		if ( globalsettings.SCREEN_SAVER_TYPE == 1):
+			self.draw.rectangle((0,0,width,height), outline=0, fill=0)
+			# Draw an ellipse.
+			self.draw.ellipse((x, top , x+shape_width, bottom), outline=255, fill=0)
+			x += shape_width+padding
+			# Draw a rectangle.
+			self.draw.rectangle((x, top, x+shape_width, bottom), outline=255, fill=0)
+			x += shape_width+padding
+			# Draw a triangle.
+			self.draw.polygon([(x, bottom), (x+shape_width/2, top), (x+shape_width, bottom)], outline=255, fill=0)
+			x += shape_width+padding
+			# Draw an X.
+			self.draw.line((x, bottom, x+shape_width, top), fill=255)
+			self.draw.line((x, top, x+shape_width, bottom), fill=255)
+			x += shape_width+padding
+			self.disp.image(self.image)
+			self.disp.display()
+			self.screenSaverI += 1
 		if (self.screenSaverI == 128):
 			self.screenSaverI = -128
-		return 0
+			
+		#display image instead of drawing
+		if ( globalsettings.SCREEN_SAVER_TYPE == 0):
+			#print("Drawing happy cat")
+			self.image = Image.open('happycat_oled_64.ppm').convert('1')
+			self.disp.image(self.image.rotate(self.screenSaverI))
+			#print(self.screenSaverI)
+			self.disp.display()
+			self.screenSaverI += 1
+			if (self.screenSaverI == 88):
+				self.screenSaverI = 0
+			
 		
 	def disableScreenSaver(self):
 		print("Disabling screensaver")
+		self.draw = ImageDraw.Draw(self.image)
 		self.clearDisplay()
 		return 0
