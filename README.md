@@ -1,6 +1,8 @@
 # rpi-128x64-oled-menusystem
-# Project goal: Creat a simple python 3 library for creating a menu driven interface on 128x64 OLED displays for 
+# Project goal: Creat a simple python 3 library for creating menu driven interfaces on 128x64 OLED displays and the 
 # the Raspberry Pi's
+# The interface can be navigated with two buttons, one to move to the next menu item and one to select the currently
+# highlighted item
 
 ##  See menusystem-example.py for skeleton project template for python main() ##
 
