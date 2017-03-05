@@ -5,7 +5,16 @@ from os import walk
 import sys
 import glob
 import csv
+## import functions for menufunc handlers
+sys.path.insert(0, "../")
+sys.path.insert(0, "./")
+from myFunctions import *
 
+# input getter
+class InputGetter:
+	def __init__(self):
+		print("InputGetter class initialised")
+		
 # menu items for each screen
 class Menu:
 	def __init__(self, items, length):
@@ -25,21 +34,21 @@ class MenuReader:
 		else:
 			print("Folder for menu files does not exist")
 		
-		#check that title files exists
+		#check that title file exists
 		if os.path.isfile(os.path.join(self.folder,"titles.lst")):
 			self.titlesFile = os.path.join(self.folder,"titles.lst")
 		else:
 			print("File with Menu titles does not exist")
+						
 		# init array to hold menus in
 		self.menus = []
 		self.menuFiles = []
 		self.Titles = []
-		
-	def getMenuFiles(self):
-		self.menuFiles = glob.glob( os.path.join(self.folder,"menu.*"))
-		
+		# load list of files in menu directory in to object
+		self.getMenuFiles()
+			
 	def processTitlesFile(self):
-		print("Processing titles files", self.titlesFile)
+		print("Processing titles file", self.titlesFile)
 		n= 0
 		with open(self.titlesFile, 'rt') as titlesfile:
 			for line in titlesfile:
@@ -49,6 +58,9 @@ class MenuReader:
 				n += 1
 		return self.Titles
 				
+	def getMenuFiles(self):
+		self.menuFiles = glob.glob( os.path.join(self.folder,"menu.*"))
+		
 	def processMenuFiles(self):
 		i = 0
 		j = 0
@@ -82,13 +94,49 @@ class MenuReader:
 		return menus
 		
 # class to deal with function handler calls
-class MenuFunc:
-	def __init__(self, funcHandler):
+class MenuFunc(MenuFunc_Base):
+	def __init__(self, folder):
 		#print("Menu func init")
+		#check that functions file exists
+		self.folder = folder
+		if os.path.isfile(os.path.join(self.folder,"functions.lst")):
+			self.functionsFile = os.path.join(self.folder,"functions.lst")
+		else:
+			print("File with Functions does not exist")
 		self.function = None
 		self.lable = None
-		self.funcHandler = None 
-		self.registerFunctions(funcHandler)
+		self.funcHandler = []
+		self.Functions = {}
+		self.functionHandlersDictionary = None
+		self.processFunctionsFile()
+		self.registerFunctions(self.Functions)  #(self.functionHandlersDictionary)
+		
+	def processFunctionsFile(self):
+		print("Processing functions file", self.functionsFile)
+		with open(self.functionsFile, 'rt') as csvfile:
+			menudata = csv.reader(csvfile, delimiter=',', quotechar='"')
+			i  = 0
+			listofFunctions = {}
+			for row in menudata:
+				# make sure second item is brought in as int
+				k = 0
+				curr = []
+				for r in row:
+					if (k == 0):
+						curr.append(str(r))
+					if (k == 1):
+						curr.append(str(r))
+					if (k == 2):
+						curr.append(str(r))
+					k += 1
+				#print(row)
+				print("creating dictionary object with key ", [curr[0], curr])
+				listofFunctions[curr[0]] = (curr[1], curr[2])
+
+				i += 1
+				self.Functions = listofFunctions
+				print("self.functions =", self.Functions)
+		return listofFunctions
 		
 	def registerFunctions(self, funcHandler):
 		print("Registering functions")
@@ -97,13 +145,14 @@ class MenuFunc:
 		self.funcHandler = funcHandler
 
 	def returnFunctionHandler(self, lable):
-		print("Return function handler for", self.funcHandler[lable][1])
-		return self.funcHandler[lable][0]
+		print("Return function handler for", self.funcHandler[0])
+		#return self.funcHandler[lable][0]
 	
 	def returnFunctionHandlerLable(self, lable):
 		print("Return function handler lable for", lable)
 		return self.funcHandler[lable][1]
 		
 	def executeFunctionHandler(self, lable):
-		print("Executing function handler", self.funcHandler[lable][1])
-		self.funcHandler[lable][0]()
+		print("Executing function handler", self.Functions[lable][0])
+		func = getattr(MenuFunc_Base, self.Functions[lable][0])
+		func()

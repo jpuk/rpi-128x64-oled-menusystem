@@ -22,7 +22,7 @@ myButtonsList = [myButton(5,"Button1", myButton.button1Handler),myButton(6, "But
 #extentions to MenuFunc class go here
 # function handlers
 class MyMenuFunc(MenuFunc):
-	def __init__(self, functionHandlersDictionary):
-		self.functionHandlersDictionary = functionHandlersDictionary
+	def __init__(self, folder):
+		#self.functionHandlersDictionary = functionHandlersDictionary
 		#print("init my menu func")
-		MenuFunc.__init__(self, self.functionHandlersDictionary)
+		MenuFunc.__init__(self, folder)

@@ -30,21 +30,22 @@ class MenuSystem:
 			# if menu link value is 999 this mean this ot is not a selectable option, if 998 it's a function handler
 			# init menu reader object
 			self.menuReader = MenuReader(globalsettings.MENU_FOLDER)
-			# load list of files in menu directory in to object
-			self.menuReader.getMenuFiles()
 			#create array of menu objects from files
 			self.menus = self.menuReader.processMenuFiles()
 			self.titles = self.menuReader.processTitlesFile()
+			#self.functions = self.menuReader.processFunctionsFile()
 			
 			# call registerFunctions() from myfunctions.py which contains function handlers and definitions
 			# functionHandlersDictionary is in myfucntions.py
-			self.myMenuFunctions = MyMenuFunc(functionHandlersDictionary)
+			self.myMenuFunctions = MyMenuFunc(globalsettings.MENU_FOLDER)
 			
 			# create button objects
 			self.buttons = myButtonsList
 
+			#initisialise input getter
+			self.inputGetter = InputGetter()
+			
 			#draw title 
-			#self.display.clearTitle()
 			self.display.drawTitle(self.titles[globalsettings.selectedMenu])
 			
 			#for button handler / main loop

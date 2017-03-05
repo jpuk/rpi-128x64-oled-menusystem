@@ -46,7 +46,7 @@ class Button:
 			print("Call to menu function handler")
 			print("Looking for match for ", functionLable)
 			#new function handler code
-			print(menufunc.returnFunctionHandler(functionLable))
+			#print(menufunc.returnFunctionHandler(functionLable))
 			menufunc.executeFunctionHandler(functionLable)
 		else:
 			globalsettings.selectedMenu = menu.items[menu.selected][1]

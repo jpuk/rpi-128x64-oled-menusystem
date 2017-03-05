@@ -24,7 +24,7 @@ FONT_SIZE = 10
 
 # screen saver setting
 SCREEN_SAVER_TYPE = 0	# 0 = image, 1 = shapes drawing
-SCREEN_SAVER_TIMEOUT = 5
+SCREEN_SAVER_TIMEOUT = 25
 
 # Time to wait between button presses
 BUTTON_SLEEP_TIME = 0.5
