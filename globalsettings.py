@@ -1,5 +1,7 @@
 ########
 #globals
+# debug messages
+DEBUGFLAG = 1
 # Raspberry Pi pin configuration:
 RST = 24
 # Note the following are only used with SPI:

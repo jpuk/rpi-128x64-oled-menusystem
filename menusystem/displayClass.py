@@ -45,14 +45,16 @@ class Display:
 		
 	#draw title in the header section of the oled
 	def drawTitle(self, text):
-		print("Drawing title")
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Drawing title")
 		self.draw.rectangle((0,0,self.width,MAIN_X), outline=0, fill=1)
 		self.draw.text((3, 3),    text[:-1], font=self.font, fill=0)
 		self.disp.image(self.image)
 		self.disp.display()
 	
 	def clearTitle(self):
-		print("Clearing title")
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Clearing title")
 		self.draw.rectangle((0,0, self.width, globalsettings.MAIN_X - 1), outline=0, fill=0)
 		self.disp.image(self.image)
 		self.disp.display()
@@ -70,7 +72,8 @@ class Display:
 	
 	#clear the main section of the screen leaving the header intact
 	def clearMainScreen(self):
-		print("Clearing main screen")
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Clearing main screen")
 		self.draw.rectangle((0,MAIN_X, self.width, 64 ), outline=0, fill=0)
 		self.disp.image(self.image)
 		self.disp.display()
@@ -83,7 +86,8 @@ class Display:
 		self.disp.display()
 	
 	def clearDisplay(self):
-		print("Clearing whole display")
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Clearing whole display")
 		self.disp.clear()
 		#self.image =  Image.new('1', (self.width, self.height))
 		self.disp.image(self.image)
@@ -135,7 +139,8 @@ class Display:
 			
 		
 	def disableScreenSaver(self):
-		print("Disabling screensaver")
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Disabling screensaver")
 		self.draw = ImageDraw.Draw(self.image)
 		self.clearDisplay()
 		return 0

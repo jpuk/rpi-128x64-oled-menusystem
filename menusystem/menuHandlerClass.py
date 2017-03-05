@@ -8,12 +8,14 @@ import csv
 ## import functions for menufunc handlers
 sys.path.insert(0, "../")
 sys.path.insert(0, "./")
+import globalsettings
 from myFunctions import *
 
 # input getter
 class InputGetter:
 	def __init__(self):
-		print("InputGetter class initialised")
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("InputGetter class initialised")
 		
 # menu items for each screen
 class Menu:
@@ -27,18 +29,22 @@ class Menu:
 class MenuReader:
 	def __init__(self, folder):
 		#check menu folder
-		print("Menu Reader class initialized")
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Menu Reader class initialized")
 		if os.path.isdir(folder):
 			self.folder = folder
-			print("Menus will be read from ", folder)
+			if (globalsettings.DEBUGFLAG >= 1):
+				print("Menus will be read from ", folder)
 		else:
-			print("Folder for menu files does not exist")
+			if (globalsettings.DEBUGFLAG >= 1):
+				print("Folder for menu files does not exist")
 		
 		#check that title file exists
 		if os.path.isfile(os.path.join(self.folder,"titles.lst")):
 			self.titlesFile = os.path.join(self.folder,"titles.lst")
 		else:
-			print("File with Menu titles does not exist")
+			if (globalsettings.globalsettings.DEBUGFLAG >= 1):
+				print("File with Menu titles does not exist")
 						
 		# init array to hold menus in
 		self.menus = []
@@ -48,12 +54,14 @@ class MenuReader:
 		self.getMenuFiles()
 			
 	def processTitlesFile(self):
-		print("Processing titles file", self.titlesFile)
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Processing titles file", self.titlesFile)
 		n= 0
 		with open(self.titlesFile, 'rt') as titlesfile:
 			for line in titlesfile:
 				self.Titles.append(line)
-				print("Title entered in to list position,",[n, self.Titles[n]])
+				if (globalsettings.DEBUGFLAG >= 1):
+					print("Title entered in to list position,",[n, self.Titles[n]])
 				#print("Line ", line)
 				n += 1
 		return self.Titles
@@ -67,7 +75,8 @@ class MenuReader:
 		listOfMenus = [[]]
 		self.menuFiles.sort()
 		for f in self.menuFiles:
-			print("Processing menu file ", f)
+			if (globalsettings.DEBUGFLAG >= 1):
+				print("Processing menu file ", f)
 			with open(f, 'rt') as csvfile:
 				j = 0
 				listOfMenus.append([])
@@ -102,7 +111,8 @@ class MenuFunc(MenuFunc_Base):
 		if os.path.isfile(os.path.join(self.folder,"functions.lst")):
 			self.functionsFile = os.path.join(self.folder,"functions.lst")
 		else:
-			print("File with Functions does not exist")
+			if (globalsettings.DEBUGFLAG >= 1):
+				print("File with Functions does not exist")
 		self.function = None
 		self.lable = None
 		self.funcHandler = []
@@ -112,7 +122,8 @@ class MenuFunc(MenuFunc_Base):
 		self.registerFunctions(self.Functions)  #(self.functionHandlersDictionary)
 		
 	def processFunctionsFile(self):
-		print("Processing functions file", self.functionsFile)
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Processing functions file", self.functionsFile)
 		with open(self.functionsFile, 'rt') as csvfile:
 			menudata = csv.reader(csvfile, delimiter=',', quotechar='"')
 			i  = 0
@@ -130,29 +141,36 @@ class MenuFunc(MenuFunc_Base):
 						curr.append(str(r))
 					k += 1
 				#print(row)
-				print("creating dictionary object with key ", [curr[0], curr])
+				if (globalsettings.DEBUGFLAG >= 1):
+					print("creating dictionary object with key ", [curr[0], curr])
 				listofFunctions[curr[0]] = (curr[1], curr[2])
 
 				i += 1
 				self.Functions = listofFunctions
-				print("self.functions =", self.Functions)
+				if (globalsettings.DEBUGFLAG >= 1):
+					print("self.functions =", self.Functions)
 		return listofFunctions
 		
 	def registerFunctions(self, funcHandler):
-		print("Registering functions")
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Registering functions")
 		for lable in funcHandler.items():
-			print("Function handler registered:", lable[1][1])
+			if (globalsettings.DEBUGFLAG >= 1):
+				print("Function handler registered:", lable[1][1])
 		self.funcHandler = funcHandler
 
 	def returnFunctionHandler(self, lable):
-		print("Return function handler for", self.funcHandler[0])
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Return function handler for", self.funcHandler[0])
 		#return self.funcHandler[lable][0]
 	
 	def returnFunctionHandlerLable(self, lable):
-		print("Return function handler lable for", lable)
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Return function handler lable for", lable)
 		return self.funcHandler[lable][1]
 		
 	def executeFunctionHandler(self, lable):
-		print("Executing function handler", self.Functions[lable][0])
+		if (globalsettings.DEBUGFLAG >= 1):
+			print("Executing function handler", self.Functions[lable][0])
 		func = getattr(MenuFunc_Base, self.Functions[lable][0])
 		func()

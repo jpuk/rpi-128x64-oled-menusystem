@@ -1,7 +1,14 @@
-# todo
-#
+# to do
+# implement system to allow user functions to create virtual screen or buffers which can be displayed on the screen
+# one method could be to provide a structure which can be overwritten before being called by a special flag
+# another could be to add a virtual item to the screens list
+# implement loading mechanism from file for user buttons
+# implement error handling for file operations
+# implement command key to safely shut down
+# implement menu flag to shutdown
 
-#imports
+# imports
+
 # global setting file
 import globalsettings
 import pdb

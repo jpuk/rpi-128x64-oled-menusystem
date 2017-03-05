@@ -1,3 +1,12 @@
+# to do
+# implement system to allow user functions to create virtual screen or buffers which can be displayed on the screen
+# one method could be to provide a structure which can be overwritten before being called by a special flag
+# another could be to add a virtual item to the screens list
+# implement loading mechanism from file for user buttons
+# implement error handling for file operations
+# implement command key to safely shut down
+# implement menu flag to shutdown
+
 # imports
 import sys
 sys.path.insert(0, "../")
@@ -20,7 +29,8 @@ from myClasses import *
 ##menu system class
 class MenuSystem:
 	def __init__(self):
-			print ("Initialising MenuSystem object")
+			if (globalsettings.DEBUGFLAG >= 1):
+				print ("Initialising MenuSystem object")
 			#set GPIO mode
 			GPIO.setmode(GPIO.BCM)	
 			#create display object
@@ -71,12 +81,14 @@ class MenuSystem:
 					#call button handler
 					button.buttonPress(menu=self.menus[globalsettings.selectedMenu],menufunc=self.myMenuFunctions)
 					if ( self.menus[globalsettings.selectedMenu].selected > (globalsettings.MAX_ITEM_PERSCREEN-1)):
-						print("scrolling past end of screen")
+						if (globalsettings.DEBUGFLAG >= 1):
+							print("scrolling past end of screen")
 						if ( globalsettings.SECOND_SCREEN == True ):
 							globalsettings.SECOND_SCREEN = False
 						if ( globalsettings.SECOND_SCREEN == False ):
 							globalsettings.SECOND_SCREEN = True
-						print("SECOND SCREEN = ", globalsettings.SECOND_SCREEN)				
+						if (globalsettings.DEBUGFLAG >= 1):
+							print("SECOND SCREEN = ", globalsettings.SECOND_SCREEN)				
 					if (self.menus[globalsettings.selectedMenu].selected == 0 or self.menus[globalsettings.selectedMenu].selected == 4):
 						#print("Clearing display")
 						self.display.clearDisplay()
